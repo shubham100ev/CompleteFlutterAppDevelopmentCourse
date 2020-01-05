@@ -1,4 +1,119 @@
+import 'package:first_app/model/question.dart';
 import 'package:flutter/material.dart';
+
+class QuizApp extends StatefulWidget {
+  @override
+  _QuizAppState createState() => _QuizAppState();
+}
+
+class _QuizAppState extends State<QuizApp> {
+  int _currentQuestionIndex = 0;
+
+  List questionBank = [
+    Question.name("The usadcvksd", true),
+    Question.name("The usadcvksdakjncj asdc", false),
+    Question.name("The usadcvksdkasc adc", true),
+    Question.name("The usadcvksdauhc  dc", false),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("True Citizen"),
+        centerTitle: true,
+        backgroundColor: Colors.blueGrey,
+      ),
+      backgroundColor: Colors.blueGrey,
+      body: Builder(
+        builder: (BuildContext context) => Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                "images/flag.png",
+                width: 250,
+                height: 180,
+              ),
+              Container(
+                padding: EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(
+                        color: Colors.blueGrey.shade200,
+                        style: BorderStyle.solid)),
+                height: 120.0,
+                child: Center(
+                    child: Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                            questionBank[_currentQuestionIndex].questionText))),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: () => _prevQuestion(),
+                    child: Icon(Icons.arrow_back),
+                  ),
+                  RaisedButton(
+                    onPressed: () => _checkAnswer(true, context),
+                    child: Text("True"),
+                  ),
+                  RaisedButton(
+                    onPressed: () => _checkAnswer(false, context),
+                    child: Text("False"),
+                  ),
+                  RaisedButton(
+                    onPressed: () => _nextQuestion(),
+                    child: Icon(Icons.arrow_forward),
+                  )
+                ],
+              ),
+              Spacer()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _checkAnswer(bool userChoice, BuildContext context) {
+    if (userChoice == questionBank[_currentQuestionIndex].isCorrect) {
+      debugPrint("Yes Correct");
+      final snackBar = SnackBar(
+        content: Text("Correct"),
+        backgroundColor: Colors.greenAccent.shade700,
+        duration: Duration(milliseconds: 500),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+      _nextQuestion();
+    } else {
+      debugPrint("Incorrect");
+      final snackBar = SnackBar(
+        content: Text("Incorrect"),
+        backgroundColor: Colors.redAccent,
+        duration: Duration(milliseconds: 500),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+      _nextQuestion();
+    }
+  }
+
+  _nextQuestion() {
+    setState(() {
+      _currentQuestionIndex=(_currentQuestionIndex+1)%questionBank.length;
+    });
+  }
+
+  _prevQuestion() {
+    setState(() {
+      _currentQuestionIndex=(_currentQuestionIndex-1)%questionBank.length;
+    });
+  }
+}
 
 class BillSplitter extends StatefulWidget {
   @override
@@ -30,7 +145,11 @@ class _BillSplitterState extends State<BillSplitter> {
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[Text("Total Per Person"), Text("\$ ${calculateTotalPerPerson(_billAmount, _personCounter, _tipPrecentage)}")],
+                  children: <Widget>[
+                    Text("Total Per Person"),
+                    Text(
+                        "\$ ${calculateTotalPerPerson(_billAmount, _personCounter, _tipPrecentage)}")
+                  ],
                 ),
               ),
             ),
@@ -154,8 +273,10 @@ class _BillSplitterState extends State<BillSplitter> {
     );
   }
 
-  calculateTotalPerPerson(double billAmount, int splitBy,int tipPercentage) {
-    var totalPerPerson = (calculateTotalTip(billAmount, splitBy, tipPercentage) + billAmount) / splitBy;
+  calculateTotalPerPerson(double billAmount, int splitBy, int tipPercentage) {
+    var totalPerPerson =
+        (calculateTotalTip(billAmount, splitBy, tipPercentage) + billAmount) /
+            splitBy;
     return totalPerPerson.toStringAsFixed(2);
   }
 
