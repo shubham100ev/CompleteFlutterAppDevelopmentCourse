@@ -22,9 +22,9 @@ class _QuizAppState extends State<QuizApp> {
       appBar: AppBar(
         title: Text("True Citizen"),
         centerTitle: true,
-        backgroundColor: Colors.blueGrey,
+//        backgroundColor: Colors.blueGrey,
       ),
-      backgroundColor: Colors.blueGrey,
+//      backgroundColor: Colors.blueGrey,
       body: Builder(
         builder: (BuildContext context) => Container(
           alignment: Alignment.center,
